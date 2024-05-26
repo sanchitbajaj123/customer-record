@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Customer</title>
+    <!-- Import Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- Import Google Icon Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h3 class="center-align">Update Customer</h3>
+        <form id="updateCustomerForm">
+            <div class="input-field">
+                <input id="name" type="text" name="name" readonly>
+                <label for="name">Name</label>
+            </div>
+            <div class="input-field">
+                <input id="email" type="email" name="email" required>
+                <label for="email">Email</label>
+            </div>
+            <div class="input-field">
+                <input id="phone" type="tel" name="phone" required>
+                <label for="phone">Phone</label>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">Update Customer</button>
+        </form>
+    </div>
+
+    <!-- Import Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch customer data and populate the form
+            fetchCustomerData();
+
+            // Handle form submission for updating customer
+            document.getElementById('updateCustomerForm').addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData);
+                // Send update request to the server
+                const response = await fetch('/update-customer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    alert('Customer updated successfully!');
+                    // Redirect to home page or any other page as needed
+                    window.location.href = '/home';
+                } else {
+                    alert('Failed to update customer. Please try again.');
+                }
+            });
+        });
+
+        async function fetchCustomerData() {
+            const response = await fetch('/get-customer');
+            const customerData = await response.json();
+            // Populate the form with customer data
+            document.getElementById('name').value = customerData.name;
+            document.getElementById('email').value = customerData.email;
+            document.getElementById('phone').value = customerData.phone;
+        }
+    </script>
+</body>
+</html>

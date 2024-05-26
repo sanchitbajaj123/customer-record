@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <!-- Import Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- Import Google Icon Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .main-content {
+            flex: 1 0 auto;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .form-container, .table-container {
+            flex: 1;
+            min-width: 300px;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Misha Eye Care</a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+            <li><a href="/home">Home</a></li>
+            <li><a href="/view-customers">View Customers</a></li>
+            <li><a href="/add-customer">Add Customer</a></li>
+            <li><a href="/update-customer">Update Customer</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Side Navigation for Mobile -->
+<ul class="sidenav" id="mobile-demo">
+    <li><a href="/home">Home</a></li>
+    <li><a href="/view-customers">View Customers</a></li>
+    <li><a href="/add-customer">Add Customer</a></li>
+    <li><a href="/update-customer">Update Customer</a></li>
+</ul>
+
+<!-- Main Content -->
+<div class="main-content container">
+    <!-- Form Container -->
+    <div class="form-container">
+        <h5>Add Customer</h5>
+        <form id="customerForm">
+            <div class="input-field">
+                <input id="name" type="text" name="name" required>
+                <label for="name">Name</label>
+            </div>
+            <div class="input-field">
+                <input id="email" type="email" name="email" required>
+                <label for="email">Email</label>
+            </div>
+            <div class="input-field">
+                <input id="phone" type="tel" name="phone" required>
+                <label for="phone">Phone</label>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">Add Customer</button>
+        </form>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+        <div class="search-container">
+            <input id="search" type="text" placeholder="Search customers...">
+        </div>
+        <h5>Customer List</h5>
+        <table class="highlight">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody id="customerTableBody">
+                <!-- Data will be inserted here from the database -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Import Materialize JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.sidenav');
+        var instances = M.Sidenav.init(elems);
+
+        // Fetch and display customers
+        fetchCustomers();
+
+        // Handle form submission
+        document.getElementById('customerForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            const response = await fetch('/add-customer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) {
+                fetchCustomers();
+                this.reset();
+            }
+        });
+
+        // Search functionality
+        document.getElementById('search').addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#customerTableBody tr');
+            rows.forEach(row => {
+                const name = row.cells[0].innerText.toLowerCase();
+                const email = row.cells[1].innerText.toLowerCase();
+                const phone = row.cells[2].innerText.toLowerCase();
+                if (name.includes(searchValue) || email.includes(searchValue) || phone.includes(searchValue)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Handle row click event to open customer details in form
+        document.getElementById('customerTableBody').addEventListener('click', async function(event) {
+            const row = event.target.closest('tr');
+            if (row) {
+                const name = row.cells[0].innerText;
+                await fetch('/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name })
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.href = '/update'; // Redirect only when the request is successful
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        });
+        
+    });
+
+    async function fetchCustomers() {
+        const response = await fetch('/customers');
+        const customers = await response.json();
+        const customerTableBody = document.getElementById('customerTableBody');
+        customerTableBody.innerHTML = '';
+        customers.forEach(customer => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${customer.name}</td>
+                <td>${customer.email}</td>
+                <td>${customer.phone}</td>
+            `;
+            customerTableBody.appendChild(row);
+        });
+    }
+</script>
+
+</body>
+</html>
