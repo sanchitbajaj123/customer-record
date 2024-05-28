@@ -13,33 +13,102 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            background-color: #e0f7fa;
         }
+
         .main-content {
             flex: 1 0 auto;
+            padding: 20px;
         }
+
         .container {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
         }
+
         .form-container, .table-container {
             flex: 1;
             min-width: 300px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
         }
+        .table-container{
+            min-width: max-content;
+        }
+
+        .table-container {
+            overflow: hidden;
+        }
+
         .table-container table {
             width: 100%;
             margin-bottom: 20px;
+            border-collapse: collapse;
+            max-width: 100px;
         }
-        .input-field select {
-            display: block;
+
+        .table-container th, .table-container td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            max-width: 130px;
+            overflow: hidden;
         }
+
+        .table-container th {
+            background-color: #26a69a;
+            color: white;
+        }
+
+        .input-field {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            border-radius: 20px;
+            background-color: #00796b;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-container input {
+            border-radius: 20px;
+            padding: 10px;
+            border: 1px solid #26a69a;
+        }
+
         .prescription-table th, .prescription-table td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
+            
         }
+
         .prescription-table th {
-            background-color: #f2f2f2;
+            background-color: #26a69a;
+            color: white;
+            
+        }
+
+        .brand-logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        span{
+            display: flex
+        }
+        @media screen and (max-width: 600px) {
+            .container {
+                flex-direction: column;
+            }
+            .form-container, .table-container {
+                min-width: auto;
+            }
         }
     </style>
 </head>
@@ -87,13 +156,13 @@
                 <input id="contactlens" type="text" name="contactlens">
                 <label for="contactlens">Contact Lens</label>
             </div>
-
             
             <div class="input-field">
                 <h6>Right Eye</h6>
                 <table class="prescription-table">
                     <thead>
                         <tr>
+                            <th rowspan="2"> </th>
                             <th>SPH</th>
                             <th>CYL</th>
                             <th>AXIS</th>
@@ -102,10 +171,22 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input id="right-sph" type="text" name="right-sph"></td>
-                            <td><input id="right-cyl" type="text" name="right-cyl"></td>
-                            <td><input id="right-axis" type="text" name="right-axis"></td>
-                            <td><input id="right-prism" type="text" name="right-prism"></td>
+                            <td>D.V.</td>
+                            <td><input id="right-sph-dv" type="text" name="right-sph-dv"></td>
+                            <td><input id="right-cyl-dv" type="text" name="right-cyl-dv"></td>
+                            <td><input id="right-axis-dv" type="text" name="right-axis-dv"></td>
+                            <td><input id="right-prism-dv" type="text" name="right-prism-dv"></td>
+                        </tr>
+                        <tr>
+                            <td>N.V.</td>
+                            <td><input id="right-sph-nv" type="text" name="right-sph-nv"></td>
+                            <td><input id="right-cyl-nv" type="text" name="right-cyl-nv"></td>
+                            <td><input id="right-axis-nv" type="text" name="right-axis-nv"></td>
+                            <td><input id="right-prism-nv" type="text" name="right-prism-nv"></td>
+                        </tr>
+                        <tr>
+                            <td>ADD</td>
+                            <td colspan="4"><input id="right-add" type="text" name="right-add"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -116,6 +197,7 @@
                 <table class="prescription-table">
                     <thead>
                         <tr>
+                            <th rowspan="2"> </th>
                             <th>SPH</th>
                             <th>CYL</th>
                             <th>AXIS</th>
@@ -124,19 +206,47 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input id="left-sph" type="text" name="left-sph"></td>
-                            <td><input id="left-cyl" type="text" name="left-cyl"></td>
-                            <td><input id="left-axis" type="text" name="left-axis"></td>
-                            <td><input id="left-prism" type="text" name="left-prism"></td>
+                            <td>D.V.</td>
+                            <td><input id="left-sph-dv" type="text" name="left-sph-dv"></td>
+                            <td><input id="left-cyl-dv" type="text" name="left-cyl-dv"></td>
+                            <td><input id="left-axis-dv" type="text" name="left-axis-dv"></td>
+                            <td><input id="left-prism-dv" type="text" name="left-prism-dv"></td>
+                        </tr>
+                        <tr>
+                            <td>N.V.</td>
+                            <td><input id="left-sph-nv" type="text" name="left-sph-nv"></td>
+                            <td><input id="left-cyl-nv" type="text" name="left-cyl-nv"></td>
+                            <td><input id="left-axis-nv" type="text" name="left-axis-nv"></td>
+                            <td><input id="left-prism-nv" type="text" name="left-prism-nv"></td>
+                        </tr>
+                        <tr>
+                            <td>ADD</td>
+                            <td colspan="4"><input id="left-add" type="text" name="left-add"></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-
+            <span>
+                <div class="input-field">
+                    <input id="total" type="number" name="total">
+                    <label for="total">Total</label>
+                </div>
+                <div class="input-field">
+                    <input id="advance" type="number" name="advance">
+                    <label for="advance">Advance</label>
+                </div>
+                <div class="input-field">
+                    <input id="balance" type="number" name="balance" placeholder="Balance">
+                    
+                </div>
+    
+            </span>
             <div class="input-field">
                 <input id="remark" type="text" name="remark">
                 <label for="remark">Remarks</label>
             </div>
+
+
             <div class="input-field">
                 <time id="currentTime" name="datetime" datetime=""></time>
             </div>
@@ -156,8 +266,9 @@
                 <tr>
                     <th>Name</th>
                     <th>Phone</th>
-                    <th>Date </th>
+                    <th>Date</th>
                     <th>Time</th>
+                    <th>id</th>
                 </tr>
             </thead>
             <tbody id="customerTableBody">
@@ -174,11 +285,10 @@
         // Initialize sidenav
         var elems = document.querySelectorAll('.sidenav');
         var instances = M.Sidenav.init(elems);
-
+    
         // Fetch and display customers
         fetchCustomers();
-
-        // Handle form submission
+    
         document.getElementById('customerForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const formData = new FormData(this);
@@ -195,7 +305,7 @@
                 this.reset();
             }
         });
-
+    
         // Search functionality
         document.getElementById('search').addEventListener('input', function() {
             const searchValue = this.value.toLowerCase();
@@ -211,12 +321,12 @@
                 }
             });
         });
-
+    
         // Handle row click event to open customer details in form
         document.getElementById('customerTableBody').addEventListener('click', async function(event) {
             const row = event.target.closest('tr');
             if (row) {
-                const name = row.cells[0].innerText;
+                const name = row.cells[4].innerText;
                 await fetch('/update', {
                     method: 'POST',
                     headers: {
@@ -232,7 +342,7 @@
                 });
             }
         });
-
+    
         // Function to update the current time every second
         function updateTime() {
             const currentTimeElement = document.getElementById('currentTime');
@@ -240,12 +350,27 @@
             currentTimeElement.dateTime = now.toISOString();
             currentTimeElement.textContent = now.toLocaleString();
         }
-
+    
         // Initialize the time and update it every second
         updateTime();
         setInterval(updateTime, 1000);
+    
+        // Add event listeners for total and advance inputs
+        const totalInput = document.getElementById('total');
+        const advanceInput = document.getElementById('advance');
+        const balanceInput = document.getElementById('balance');
+    
+        function calculateBalance() {
+            const total = parseFloat(totalInput.value) || 0;
+            const advance = parseFloat(advanceInput.value) || 0;
+            const balance = total - advance;
+            balanceInput.value = balance.toFixed(2);
+        }
+    
+        totalInput.addEventListener('input', calculateBalance);
+        advanceInput.addEventListener('input', calculateBalance);
     });
-
+    
     async function fetchCustomers() {
         const response = await fetch('/customers');
         const customers = await response.json();
@@ -258,10 +383,12 @@
                 <td>${customer.phone}</td>
                 <td>${customer.dateAdded}</td>
                 <td>${customer.timeAdded}</td>
+                <td>${customer._id}</td>
             `;
             customerTableBody.appendChild(row);
         });
     }
+    
 </script>
 
 </body>

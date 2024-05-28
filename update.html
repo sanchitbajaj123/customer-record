@@ -36,6 +36,25 @@
         .prescription-table th {
             background-color: #f2f2f2;
         }
+        @media screen and (max-width: 600px) {
+        
+            .prescription-table {
+                
+               max-width: 40px;
+                overflow: hidden;
+            }
+        
+            .prescription-table th, .prescription-table td {
+                border: 1px solid #ddd;
+                padding: 0px;
+                font-size: smaller;
+                text-align: center;
+                background-color: #f2f2f2;
+                max-width: 40px;
+            }
+        }
+        
+        
     </style>
 </head>
 <body>
@@ -50,44 +69,46 @@
                 <p><i class="material-icons left">visibility</i> <strong>Contact Lens:</strong> <span id="customer-contact-lens"></span></p>
                 
                 <div class="input-field">
-                    <h6>Right Eye Prescription</h6>
+                    <h6>Prescription</h6>
                     <table class="prescription-table">
                         <thead>
                             <tr>
-                                <th>SPH</th>
-                                <th>CYL</th>
-                                <th>AXIS</th>
-                                <th>PRISM</th>
+                                <th></th>
+                                <th>Sphere (DV)</th>
+                                <th>Cylinder (DV)</th>
+                                <th>Axis (DV)</th>
+                                <th>Prism (DV)</th>
+                                <th>Sphere (NV)</th>
+                                <th>Cylinder (NV)</th>
+                                <th>Axis (NV)</th>
+                                <th>Prism (NV)</th>
+                                <th>Add</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><span id="customer-right-sph"></span></td>
-                                <td><span id="customer-right-cyl"></span></td>
-                                <td><span id="customer-right-axis"></span></td>
-                                <td><span id="customer-right-prism"></span></td>
+                                <td><strong>Right Eye</strong></td>
+                                <td><span id="customer-right-sph-dv"></span></td>
+                                <td><span id="customer-right-cyl-dv"></span></td>
+                                <td><span id="customer-right-axis-dv"></span></td>
+                                <td><span id="customer-right-prism-dv"></span></td>
+                                <td><span id="customer-right-sph-nv"></span></td>
+                                <td><span id="customer-right-cyl-nv"></span></td>
+                                <td><span id="customer-right-axis-nv"></span></td>
+                                <td><span id="customer-right-prism-nv"></span></td>
+                                <td><span id="customer-right-add"></span></td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="input-field">
-                    <h6>Left Eye Prescription</h6>
-                    <table class="prescription-table">
-                        <thead>
                             <tr>
-                                <th>SPH</th>
-                                <th>CYL</th>
-                                <th>AXIS</th>
-                                <th>PRISM</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span id="customer-left-sph"></span></td>
-                                <td><span id="customer-left-cyl"></span></td>
-                                <td><span id="customer-left-axis"></span></td>
-                                <td><span id="customer-left-prism"></span></td>
+                                <td><strong>Left Eye</strong></td>
+                                <td><span id="customer-left-sph-dv"></span></td>
+                                <td><span id="customer-left-cyl-dv"></span></td>
+                                <td><span id="customer-left-axis-dv"></span></td>
+                                <td><span id="customer-left-prism-dv"></span></td>
+                                <td><span id="customer-left-sph-nv"></span></td>
+                                <td><span id="customer-left-cyl-nv"></span></td>
+                                <td><span id="customer-left-axis-nv"></span></td>
+                                <td><span id="customer-left-prism-nv"></span></td>
+                                <td><span id="customer-left-add"></span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -96,8 +117,14 @@
                 <p><i class="material-icons left">comment</i> <strong>Remarks:</strong> <span id="customer-remarks"></span></p>
                 <p><i class="material-icons left">date_range</i> <strong>Date Added:</strong> <span id="customer-date-added"></span></p>
                 <p><i class="material-icons left">access_time</i> <strong>Time Added:</strong> <span id="customer-time-added"></span></p>
+                <p><strong>Total:</strong> <span id="customer-total"></span></p>
+                <p><strong>Advance:</strong> <span id="customer-advance"></span></p>
+                <p><strong>Balance:</strong> <span id="customer-balance"></span></p>
                 <div class="center-align back-button">
                     <a href="/home" class="btn blue waves-effect waves-light">Back to Home</a>
+                </div>
+                <div class="center-align back-button">
+                    <a href="/delete" class="btn blue waves-effect waves-light">Delete</a>
                 </div>
             </div>
         </div>
@@ -116,22 +143,34 @@
             const customerData = await response.json();
             // Populate the display with customer data
             document.getElementById('customer-name').textContent = customerData.name;
-            
             document.getElementById('customer-phone').textContent = customerData.phone;
             document.getElementById('customer-frame').textContent = customerData.frame;
             document.getElementById('customer-glasses').textContent = customerData.glasses;
             document.getElementById('customer-contact-lens').textContent = customerData.contactlens;
-            document.getElementById('customer-right-sph').textContent = customerData.prescription.right.sph;
-            document.getElementById('customer-right-cyl').textContent = customerData.prescription.right.cyl;
-            document.getElementById('customer-right-axis').textContent = customerData.prescription.right.axis;
-            document.getElementById('customer-right-prism').textContent = customerData.prescription.right.prism;
-            document.getElementById('customer-left-sph').textContent = customerData.prescription.left.sph;
-            document.getElementById('customer-left-cyl').textContent = customerData.prescription.left.cyl;
-            document.getElementById('customer-left-axis').textContent = customerData.prescription.left.axis;
-            document.getElementById('customer-left-prism').textContent = customerData.prescription.left.prism;
+            document.getElementById('customer-right-sph-dv').textContent = customerData.prescription.right.sphDV;
+            document.getElementById('customer-right-cyl-dv').textContent = customerData.prescription.right.cylDV;
+            document.getElementById('customer-right-axis-dv').textContent = customerData.prescription.right.axisDV;
+            document.getElementById('customer-right-prism-dv').textContent = customerData.prescription.right.prismDV;
+            document.getElementById('customer-right-sph-nv').textContent = customerData.prescription.right.sphNV;
+            document.getElementById('customer-right-cyl-nv').textContent = customerData.prescription.right.cylNV;
+            document.getElementById('customer-right-axis-nv').textContent = customerData.prescription.right.axisNV;
+            document.getElementById('customer-right-prism-nv').textContent = customerData.prescription.right.prismNV;
+            document.getElementById('customer-right-add').textContent = customerData.prescription.right.add;
+            document.getElementById('customer-left-sph-dv').textContent = customerData.prescription.left.sphDV;
+            document.getElementById('customer-left-cyl-dv').textContent = customerData.prescription.left.cylDV;
+            document.getElementById('customer-left-axis-dv').textContent = customerData.prescription.left.axisDV;
+            document.getElementById('customer-left-prism-dv').textContent = customerData.prescription.left.prismDV;
+            document.getElementById('customer-left-sph-nv').textContent = customerData.prescription.left.sphNV;
+            document.getElementById('customer-left-cyl-nv').textContent = customerData.prescription.left.cylNV;
+            document.getElementById('customer-left-axis-nv').textContent = customerData.prescription.left.axisNV;
+            document.getElementById('customer-left-prism-nv').textContent = customerData.prescription.left.prismNV;
+            document.getElementById('customer-left-add').textContent = customerData.prescription.left.add;
             document.getElementById('customer-remarks').textContent = customerData.remark;
             document.getElementById('customer-date-added').textContent = customerData.dateAdded;
             document.getElementById('customer-time-added').textContent = customerData.timeAdded;
+            document.getElementById('customer-total').textContent = customerData.total;
+            document.getElementById('customer-advance').textContent = customerData.advance;
+            document.getElementById('customer-balance').textContent = customerData.balance;
         }
     </script>
 </body>
