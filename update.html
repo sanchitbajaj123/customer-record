@@ -3,70 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Customer</title>
+    <title>Customer Details</title>
     <!-- Import Materialize CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <!-- Import Google Icon Font -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .section {
+            padding: 20px 0;
+        }
+        .customer-info {
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        .customer-info h5 {
+            margin-bottom: 20px;
+        }
+        .customer-info p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .back-button {
+            margin-top: 20px;
+        }
+        .prescription-table th, .prescription-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .prescription-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h3 class="center-align">Update Customer</h3>
-        <form id="updateCustomerForm">
-            <div class="input-field">
-                <input id="name" type="text" name="name" readonly>
-                <label for="name">Name</label>
+        <h3 class="center-align section">Customer Details</h3>
+        <div class="row">
+            <div class="col s12 m8 offset-m2 customer-info">
+                <h5 id="customer-name" class="center-align"></h5>
+                <p><i class="material-icons left">phone</i> <strong>Phone:</strong> <span id="customer-phone"></span></p>
+                <p><i class="material-icons left">description</i> <strong>Frame:</strong> <span id="customer-frame"></span></p>
+                <p><i class="material-icons left">remove_red_eye</i> <strong>Glasses:</strong> <span id="customer-glasses"></span></p>
+                <p><i class="material-icons left">visibility</i> <strong>Contact Lens:</strong> <span id="customer-contact-lens"></span></p>
+                
+                <div class="input-field">
+                    <h6>Right Eye Prescription</h6>
+                    <table class="prescription-table">
+                        <thead>
+                            <tr>
+                                <th>SPH</th>
+                                <th>CYL</th>
+                                <th>AXIS</th>
+                                <th>PRISM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span id="customer-right-sph"></span></td>
+                                <td><span id="customer-right-cyl"></span></td>
+                                <td><span id="customer-right-axis"></span></td>
+                                <td><span id="customer-right-prism"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="input-field">
+                    <h6>Left Eye Prescription</h6>
+                    <table class="prescription-table">
+                        <thead>
+                            <tr>
+                                <th>SPH</th>
+                                <th>CYL</th>
+                                <th>AXIS</th>
+                                <th>PRISM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span id="customer-left-sph"></span></td>
+                                <td><span id="customer-left-cyl"></span></td>
+                                <td><span id="customer-left-axis"></span></td>
+                                <td><span id="customer-left-prism"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p><i class="material-icons left">comment</i> <strong>Remarks:</strong> <span id="customer-remarks"></span></p>
+                <p><i class="material-icons left">date_range</i> <strong>Date Added:</strong> <span id="customer-date-added"></span></p>
+                <p><i class="material-icons left">access_time</i> <strong>Time Added:</strong> <span id="customer-time-added"></span></p>
+                <div class="center-align back-button">
+                    <a href="/home" class="btn blue waves-effect waves-light">Back to Home</a>
+                </div>
             </div>
-            <div class="input-field">
-                <input id="email" type="email" name="email" required>
-                <label for="email">Email</label>
-            </div>
-            <div class="input-field">
-                <input id="phone" type="tel" name="phone" required>
-                <label for="phone">Phone</label>
-            </div>
-            <button class="btn waves-effect waves-light" type="submit">Update Customer</button>
-        </form>
+        </div>
     </div>
 
     <!-- Import Materialize JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Fetch customer data and populate the form
+            // Fetch customer data and populate the display
             fetchCustomerData();
-
-            // Handle form submission for updating customer
-            document.getElementById('updateCustomerForm').addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const formData = new FormData(this);
-                const data = Object.fromEntries(formData);
-                // Send update request to the server
-                const response = await fetch('/update-customer', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                if (response.ok) {
-                    alert('Customer updated successfully!');
-                    // Redirect to home page or any other page as needed
-                    window.location.href = '/home';
-                } else {
-                    alert('Failed to update customer. Please try again.');
-                }
-            });
         });
 
         async function fetchCustomerData() {
             const response = await fetch('/get-customer');
             const customerData = await response.json();
-            // Populate the form with customer data
-            document.getElementById('name').value = customerData.name;
-            document.getElementById('email').value = customerData.email;
-            document.getElementById('phone').value = customerData.phone;
+            // Populate the display with customer data
+            document.getElementById('customer-name').textContent = customerData.name;
+            
+            document.getElementById('customer-phone').textContent = customerData.phone;
+            document.getElementById('customer-frame').textContent = customerData.frame;
+            document.getElementById('customer-glasses').textContent = customerData.glasses;
+            document.getElementById('customer-contact-lens').textContent = customerData.contactlens;
+            document.getElementById('customer-right-sph').textContent = customerData.prescription.right.sph;
+            document.getElementById('customer-right-cyl').textContent = customerData.prescription.right.cyl;
+            document.getElementById('customer-right-axis').textContent = customerData.prescription.right.axis;
+            document.getElementById('customer-right-prism').textContent = customerData.prescription.right.prism;
+            document.getElementById('customer-left-sph').textContent = customerData.prescription.left.sph;
+            document.getElementById('customer-left-cyl').textContent = customerData.prescription.left.cyl;
+            document.getElementById('customer-left-axis').textContent = customerData.prescription.left.axis;
+            document.getElementById('customer-left-prism').textContent = customerData.prescription.left.prism;
+            document.getElementById('customer-remarks').textContent = customerData.remark;
+            document.getElementById('customer-date-added').textContent = customerData.dateAdded;
+            document.getElementById('customer-time-added').textContent = customerData.timeAdded;
         }
     </script>
 </body>

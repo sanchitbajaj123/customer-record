@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Customer Details</title>
     <!-- Import Materialize CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <!-- Import Google Icon Font -->
@@ -26,8 +26,20 @@
             flex: 1;
             min-width: 300px;
         }
-        .search-container {
+        .table-container table {
+            width: 100%;
             margin-bottom: 20px;
+        }
+        .input-field select {
+            display: block;
+        }
+        .prescription-table th, .prescription-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .prescription-table th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
@@ -39,20 +51,14 @@
         <a href="#" class="brand-logo">Misha Eye Care</a>
         <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         <ul class="right hide-on-med-and-down">
-            <li><a href="/home">Home</a></li>
-            <li><a href="/view-customers">View Customers</a></li>
-            <li><a href="/add-customer">Add Customer</a></li>
-            <li><a href="/update-customer">Update Customer</a></li>
+            <li><a href="/coming soon">COMING SOON</a></li>
         </ul>
     </div>
 </nav>
 
 <!-- Side Navigation for Mobile -->
 <ul class="sidenav" id="mobile-demo">
-    <li><a href="/home">Home</a></li>
-    <li><a href="/view-customers">View Customers</a></li>
-    <li><a href="/add-customer">Add Customer</a></li>
-    <li><a href="/update-customer">Update Customer</a></li>
+    <li><a href="/coming soon">COMING SOON</a></li>
 </ul>
 
 <!-- Main Content -->
@@ -66,14 +72,76 @@
                 <label for="name">Name</label>
             </div>
             <div class="input-field">
-                <input id="email" type="email" name="email" required>
-                <label for="email">Email</label>
-            </div>
-            <div class="input-field">
-                <input id="phone" type="tel" name="phone" required>
+                <input id="phone" type="tel" name="phone">
                 <label for="phone">Phone</label>
             </div>
-            <button class="btn waves-effect waves-light" type="submit">Add Customer</button>
+            <div class="input-field">
+                <input id="frame" type="text" name="frame">
+                <label for="frame">Frame</label>
+            </div>
+            <div class="input-field">
+                <input id="glasses" type="text" name="glasses">
+                <label for="glasses">Glasses</label>
+            </div>
+            <div class="input-field">
+                <input id="contactlens" type="text" name="contactlens">
+                <label for="contactlens">Contact Lens</label>
+            </div>
+
+            
+            <div class="input-field">
+                <h6>Right Eye</h6>
+                <table class="prescription-table">
+                    <thead>
+                        <tr>
+                            <th>SPH</th>
+                            <th>CYL</th>
+                            <th>AXIS</th>
+                            <th>PRISM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input id="right-sph" type="text" name="right-sph"></td>
+                            <td><input id="right-cyl" type="text" name="right-cyl"></td>
+                            <td><input id="right-axis" type="text" name="right-axis"></td>
+                            <td><input id="right-prism" type="text" name="right-prism"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="input-field">
+                <h6>Left Eye</h6>
+                <table class="prescription-table">
+                    <thead>
+                        <tr>
+                            <th>SPH</th>
+                            <th>CYL</th>
+                            <th>AXIS</th>
+                            <th>PRISM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input id="left-sph" type="text" name="left-sph"></td>
+                            <td><input id="left-cyl" type="text" name="left-cyl"></td>
+                            <td><input id="left-axis" type="text" name="left-axis"></td>
+                            <td><input id="left-prism" type="text" name="left-prism"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="input-field">
+                <input id="remark" type="text" name="remark">
+                <label for="remark">Remarks</label>
+            </div>
+            <div class="input-field">
+                <time id="currentTime" name="datetime" datetime=""></time>
+            </div>
+            <center>
+            <button class="btn waves-effect waves-light" type="submit">Add Customer</button></center>
         </form>
     </div>
 
@@ -87,8 +155,9 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Email</th>
                     <th>Phone</th>
+                    <th>Date </th>
+                    <th>Time</th>
                 </tr>
             </thead>
             <tbody id="customerTableBody">
@@ -102,6 +171,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize sidenav
         var elems = document.querySelectorAll('.sidenav');
         var instances = M.Sidenav.init(elems);
 
@@ -162,7 +232,18 @@
                 });
             }
         });
-        
+
+        // Function to update the current time every second
+        function updateTime() {
+            const currentTimeElement = document.getElementById('currentTime');
+            const now = new Date();
+            currentTimeElement.dateTime = now.toISOString();
+            currentTimeElement.textContent = now.toLocaleString();
+        }
+
+        // Initialize the time and update it every second
+        updateTime();
+        setInterval(updateTime, 1000);
     });
 
     async function fetchCustomers() {
@@ -174,8 +255,9 @@
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${customer.name}</td>
-                <td>${customer.email}</td>
                 <td>${customer.phone}</td>
+                <td>${customer.dateAdded}</td>
+                <td>${customer.timeAdded}</td>
             `;
             customerTableBody.appendChild(row);
         });
