@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const app = express();
 const port = 3000;
+const hostname = '0.0.0.0';
+
 
 // Middleware for serving static files
 app.use(express.static('public'));
@@ -117,6 +119,6 @@ app.get('/get-customer', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+const server = app.listen(process.env.PORT || 3000, hostname, () => {
+    console.log("listening");
 });
