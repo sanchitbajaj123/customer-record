@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Balances</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+<center>
+<h2>Customer Balances</h2>
+</center>
+<input type="text" id="searchInput" onkeyup="search()" placeholder="Search for names, phone numbers, or balances..">
+
+<table id="customerTable">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Phone Number</th>
+      <th>Balance</th> <!-- New column for balance -->
+    </tr>
+  </thead>
+  <tbody id="customerTableBody">
+    <!-- Customer data will be populated here -->
+  </tbody>
+</table>
+
+<script>
+async function fetchData() {
+    try {
+        const response = await fetch('/pendingbalance');
+        const data = await response.json();
+        console.log("Fetched data:", data); // Log the fetched data
+        return data; // No need for data.data since the response already contains the array
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return [];
+    }
+}
+
+function populateTable(data) {
+    const tableBody = document.getElementById('customerTableBody');
+    tableBody.innerHTML = '';
+
+    data.forEach(customer => {
+        console.log("Customer:", customer); // Log each customer data
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${customer.name}</td>
+            <td>${customer.phone || ''}</td> <!-- Handle case where phone is undefined -->
+            <td>${customer.balance}</td> <!-- Display balance -->
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+async function search() {
+    const searchText = document.getElementById('searchInput').value.toLowerCase();
+    const data = await fetchData();
+    const filteredData = data.filter(customer => 
+        customer.name.toLowerCase().includes(searchText) ||
+        (customer.phone && customer.phone.includes(searchText)) || // Check if phone exists
+        String(customer.balance).includes(searchText) // Convert balance to string for search
+    );
+    populateTable(filteredData);
+}
+
+// Initial data load
+fetchData().then(data => populateTable(data));
+</script>
+
+</body>
+</html>

@@ -36,6 +36,11 @@
         .prescription-table th {
             background-color: #f2f2f2;
         }
+        h3{
+            
+            font-weight: bold;
+            color: red;
+        }
         @media screen and (max-width: 600px) {
         
             .prescription-table {
@@ -59,15 +64,16 @@
 </head>
 <body>
     <div class="container">
-        <h3 class="center-align section">Customer Details</h3>
+        <h2 class="center-align section">Customer Details</h2>
         <div class="row">
             <div class="col s12 m8 offset-m2 customer-info">
-                <h5 id="customer-name" class="center-align"></h5>
+                <center><h3>MISHA EYE CARE</h3></center>
+                <h5 id="customer-name"></h5>
                 <p><i class="material-icons left">phone</i> <strong>Phone:</strong> <span id="customer-phone"></span></p>
                 <p><i class="material-icons left">description</i> <strong>Frame:</strong> <span id="customer-frame"></span></p>
                 <p><i class="material-icons left">remove_red_eye</i> <strong>Glasses:</strong> <span id="customer-glasses"></span></p>
                 <p><i class="material-icons left">visibility</i> <strong>Contact Lens:</strong> <span id="customer-contact-lens"></span></p>
-                
+
                 <div class="input-field">
                     <h6>Prescription</h6>
                     <table class="prescription-table">
@@ -122,6 +128,9 @@
                 <p><strong>Balance:</strong> <span id="customer-balance"></span></p>
                 <div class="center-align back-button">
                     <a href="/home" class="btn blue waves-effect waves-light">Back to Home</a>
+                </div>
+                <div class="center-align back-button">
+                    <a href="/balanceclear" class="btn blue waves-effect waves-light">BALANCE CLEAR</a>
                 </div>
                 <div class="center-align back-button">
                     <a href="/delete" class="btn blue waves-effect waves-light">Delete</a>
